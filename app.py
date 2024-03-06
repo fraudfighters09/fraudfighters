@@ -216,5 +216,5 @@ def mail_send(receive_mail, subject, body, user_input):
     )
 
 
-if __name__ == "__main__":
-    app.run(debug=True)
+# if __name__ == "__main__":
+#     app.run(debug=True)
