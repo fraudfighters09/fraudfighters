@@ -1,6 +1,6 @@
 flask
 tensorflow==2.12.0
 keras
-pickle
+pickleshare==0.7.5
 pandas
 numpy
