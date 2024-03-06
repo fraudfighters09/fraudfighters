@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fraud Fighters</title>
+
+    <script src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='toast.css') }}"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
+  </head>
+  <body>
+    <div class="main">
+      <div class="bar">
+        <div class="bar-wrapper container">
+          <img
+            src="{{ url_for('static', filename='Images/logo.png') }}"
+            class="logo"
+          />
+          <div class="bar-options">
+            <a class="bar-option" id="btn">Login</a>
+            <a href="{{ url_for('contactUs') }}" class="bar-option"
+              >Contact Us</a
+            >
+          </div>
+        </div>
+      </div>
+      <div class="des">
+        <h1>
+          AI Fortifies UPI: Fraud Vanquished, Transactions Secured. Your Digital
+          Confidence Elevated, Always...
+        </h1>
+        <p>
+          Unparalleled Security: Our AI-driven UPI Fraud Detection - Where
+          Innovation Safeguards Every Transaction with Precision and Trust.
+        </p>
+      </div>
+      <center>
+        <div class="wrapper">
+          <span class="icon-close">
+            <ion-icon name="close" id="close"></ion-icon>
+          </span>
+          <div class="form-box login">
+            <h2>Login</h2>
+            <form id="loginForm" method="POST">
+              <div class="input-box">
+                <span class="icon">
+                  <ion-icon name="mail"></ion-icon>
+                </span>
+                <input type="email" id="loginEmail" required />
+                <label>Email</label>
+              </div>
+              <div class="input-box">
+                <span class="icon">
+                  <ion-icon name="lock-closed"></ion-icon>
+                </span>
+                <input type="password" id="loginPassword" required />
+                <label>Password</label>
+              </div>
+              <button
+                type="submit"
+                formaction="{{ url_for('home') }}"
+                class="btn"
+              >
+                Login
+              </button>
+              <div class="login-register">
+                <p>
+                  Don't have an account?
+                  <a class="register-link">Register</a>
+                </p>
+              </div>
+            </form>
+          </div>
+
+          <div class="form-box register">
+            <h2>Register</h2>
+            <form id="registerForm" method="POST">
+              <div class="input-box">
+                <span class="icon">
+                  <ion-icon name="person"></ion-icon>
+                </span>
+                <input type="text" id="registerUsername" required />
+                <label>Username</label>
+              </div>
+              <div class="input-box">
+                <span class="icon">
+                  <ion-icon name="mail"></ion-icon>
+                </span>
+                <input type="email" id="registerEmail" required />
+                <label>Email</label>
+              </div>
+              <div class="input-box">
+                <span class="icon">
+                  <ion-icon name="lock-closed"></ion-icon>
+                </span>
+                <input type="password" id="registerPassword" required />
+                <label>Password</label>
+              </div>
+              <button type="submit" value="submit" class="btn">Register</button>
+              <div class="login-register">
+                <p>
+                  Already have an account?
+                  <a class="login-link">Login</a>
+                </p>
+              </div>
+            </form>
+          </div>
+        </div>
+      </center>
+    </div>
+    <script src="{{ url_for('static', filename='toast.js') }}"></script>
+    <script src="{{ url_for('static', filename='auth.js') }}"></script>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
+      import {
+        getDatabase,
+        get,
+        set,
+        ref,
+        child,
+      } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+      import {
+        getAuth,
+        createUserWithEmailAndPassword,
+        signInWithEmailAndPassword,
+      } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+      const firebaseConfig = {
+        apiKey: "AIzaSyDdcaYbAlFdzOK5DPN9RLnmQb5XAuOs4ig",
+        authDomain: "fruadfighters.firebaseapp.com",
+        projectId: "fruadfighters",
+        storageBucket: "fruadfighters.appspot.com",
+        messagingSenderId: "1037155308240",
+        appId: "1:1037155308240:web:831ee08f458005440d04d5",
+        measurementId: "G-K2MMBPG4EN",
+      };
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+      const db = getDatabase(app);
+      const auth = getAuth(app);
+      const dbref = ref(db);
+
+      document
+        .getElementById("registerForm")
+        .addEventListener("submit", (evt) => {
+          evt.preventDefault();
+          const username = document.getElementById("registerUsername").value;
+          const email = document.getElementById("registerEmail").value;
+          const pwd = document.getElementById("registerPassword").value;
+
+          createUserWithEmailAndPassword(auth, email, pwd)
+            .then((credentials) => {
+              set(child(dbref, "users/" + credentials.user.uid), {
+                username: username,
+                email: email,
+              });
+
+              console.log("Registration successful:", credentials.user.uid);
+              document.getElementById("registerForm").reset();
+              showToast("User Created Successfully...", "success", 5000);
+
+            })
+            .catch((error) => {
+              console.error("Registration error:", error.message);
+              showToast("Credentials Already Exist!!!", "danger", 5000);
+              document.getElementById("registerForm").reset();
+            });
+        });
+
+      document.getElementById("loginForm").addEventListener("submit", (evt) => {
+        evt.preventDefault();
+        const email = document.getElementById("loginEmail").value;
+        const password = document.getElementById("loginPassword").value;
+
+        signInWithEmailAndPassword(auth, email, password)
+          .then((credentials) => {
+            get(child(dbref, "users/" + credentials.user.uid)).then(
+              (snapshot) => {
+                if (snapshot.exists) {
+                  sessionStorage.setItem(
+                    "user-info",
+                    JSON.stringify({
+                      username: snapshot.val().username,
+                      email: snapshot.val().email,
+                    })
+                  );
+                  sessionStorage.setItem(
+                    "user-creds",
+                    JSON.stringify(credentials.user)
+                  );
+                  window.location.href='{{ url_for('home') }}';
+                }
+              }
+            );
+          })
+          .catch((error) => {
+            showToast("Invalid Credentials!!!", "danger", 5000);
+            console.error("Login error:", error.message);
+            document.getElementById("loginForm").reset();
+          });
+      });
+      document.getElementById("close").addEventListener("click", function () {
+        document.getElementById("loginForm").reset();
+      });
+    </script>
+  </body>
+</html>

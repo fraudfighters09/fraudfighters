@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fraud Fighters</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='result.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='toast.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
+  </head>
+  <body>
+    <div class="main">
+      <div class="bar">
+        <div class="bar-wrapper container">
+          <img
+            src="{{ url_for('static', filename='Images/logo.png') }}"
+            class="logo"
+          />
+          <div class="bar-options">
+            <span class="bar-option">
+              <ion-icon name="exit-outline" id="signout"></ion-icon>
+            </span>
+          </div>
+        </div>
+      </div>
+      <center>
+        <form id="predictForm">
+          <h1>Prediction</h1>
+          {% if ans %}
+          <h2 style="color: Green; font-weight: bold; margin-bottom: 5px">
+            Possibility of Genuine UPI Transaction
+          </h2>
+          <p style="color: white">
+            The probability of the Transaction being Fraud is {{prob}}%
+          </p>
+          {% else %}
+          <h2 style="color: red; font-weight: bold; margin-bottom: 5px">
+            Possibility of Fake UPI Transaction
+          </h2>
+          <p style="color: white">
+            The probability of the Transaction being Fraud is {{prob}}%
+          </p>
+          {% endif %}
+        </form>
+      </center>
+    </div>
+
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
+    <script src="{{ url_for('static', filename='toast.js') }}"></script>
+    <script src="{{ url_for('static', filename='signout.js') }}"></script>
+    <script>
+      Swal.fire({
+        title: "Thank You",
+        text: "A Mail has been set th your Verified Google Email Address...",
+        icon: "success",
+      });
+    </script>
+  </body>
+</html>

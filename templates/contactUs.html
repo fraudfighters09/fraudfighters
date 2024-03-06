@@ -1,0 +1,76 @@
+<html>
+  <head>
+    <script src="{{ url_for('static', filename='toast.js') }}"></script>
+    <title>Fraud Fighters</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='toast.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='contactUs.css') }}"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <form id="contactForm" autocomplete="off">
+        <h1>Contact Us</h1>
+        <p>
+          Please use this form to get in touch with us, report a bug, or suggest
+          a feature...
+        </p>
+        <input
+          type="text"
+          id="fname"
+          placeholder="First Name"
+          required
+          autocomplete="off"
+        />
+        <input
+          type="text"
+          id="lname"
+          placeholder="Last Name"
+          required
+          autocomplete="off"
+        />
+        <input
+          type="email"
+          id="email"
+          placeholder="Email"
+          required
+          autocomplete="off"
+        />
+        <input
+          type="text"
+          pattern="^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$"
+          id="mobile"
+          placeholder="Mobile"
+          required
+          autocomplete="off"
+        />
+        <h4>Type Your Message Here...</h4>
+        <textarea required></textarea>
+        <input type="submit" value="Send" id="button" />
+      </form>
+    </div>
+    <div id="toastContainer"></div>
+    <script>
+      document
+        .getElementById("contactForm")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+          showToast(
+            "Successfully Submited! Thanks for your response, we will contact you soon...",
+            "success",
+            5000
+          );
+          document.getElementById("contactForm").reset();
+        });
+    </script>
+  </body>
+</html>

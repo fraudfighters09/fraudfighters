@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fraud Fighters</title>
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='predict.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='toast.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
+  </head>
+  <body>
+    <div class="main">
+      <div class="bar">
+        <div class="bar-wrapper container">
+          <img
+            src="{{ url_for('static', filename='Images/logo.png') }}"
+            class="logo"
+          />
+          <div class="bar-options">
+            <span class="bar-option">
+              <ion-icon name="exit-outline" id="signout"></ion-icon>
+            </span>
+          </div>
+        </div>
+      </div>
+      <center>
+        <form
+          id="form"
+          class="form"
+          method="POST"
+          action="{{ url_for('result') }}"
+        >
+          <h1>UPI Fraud Detection</h1>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="Verified Google Email Address"
+            required
+          />
+          <input
+            type="text"
+            id="tid"
+            placeholder="Transaction Id"
+            name="trans_id"
+            required
+            pattern="^[A-Z0-9]{12,12}"
+          />
+          <input
+            type="number"
+            id="amt"
+            placeholder="Amount"
+            name="amount"
+            required
+            min="0"
+          />
+          <input type="date" id="date" name="date" required />
+          <input type="time" id="time" name="time" required />
+          <input
+            type="text"
+            id="sender-upi"
+            placeholder="Sender's UPI Id"
+            required
+            name="send_upi"
+            pattern="^[a-zA-Z0-9.\-]{2,49}@[a-zA-Z.]{2,49}$"
+            title="Please enter a valid UPI ID Ex: sample@oksbi."
+          />
+          <input
+            type="text"
+            id="receiver-upi"
+            placeholder="Receiver's UPI Id"
+            required
+            name="rec_upi"
+            pattern="^[a-zA-Z0-9.\-]{2,49}@[a-zA-Z.]{2,49}$"
+            title="Please enter a valid UPI ID Ex: sample@oksbi."
+          />
+          <input
+            type="tel"
+            id="sender-mobile"
+            placeholder="Sender's Mobile Number"
+            required
+            name="s_num"
+            pattern="^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$"
+            title="Please enter a valid Mobile Number using format +91xxxx-nnnnnn."
+            ;
+          />
+          <input
+            type="tel"
+            id="receiver-mobile"
+            name="r_num"
+            placeholder="Receiver's Mobile Number"
+            required
+            pattern="^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$"
+            title="Please enter a valid Mobile Number using format +91xxxx-nnnnnn."
+            ;
+          />
+          <input
+            type="number"
+            id="age"
+            placeholder="Age"
+            required
+            name="age"
+            min="18"
+            max="100"
+          />
+          <div class="dropdown">
+            <label for="category" id="category">Category of Payment:</label>
+            <select name="category" required>
+              <option value="entertainment">Entertainment</option>
+              <option value="food">Food</option>
+              <option value="gas">Gas Transport</option>
+              <option value="Grocery-net">Grocery Net</option>
+              <option value="Grocery-pos">Grocery Pos</option>
+              <option value="Health-fitness">Health Fitness</option>
+              <option value="Home">Home</option>
+              <option value="Kid-pet">Kid Pet</option>
+              <option value="micellines">Micellines</option>
+              <option value="personal-care">Personal Care</option>
+              <option value="shopping">Shopping</option>
+              <option value="travel">Travel</option>
+            </select>
+            <input
+              type="submit"
+              formaction="{{ url_for('result') }}"
+              value="Send"
+              id="button"
+            />
+          </div>
+        </form>
+      </center>
+    </div>
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
+    <script src="{{ url_for('static', filename='toast.js') }}"></script>
+    <script src="{{ url_for('static', filename='signout.js') }}"></script>
+
+    <script>
+      const currentDate = new Date().toISOString().split("T")[0];
+      const currentTime = new Date().toTimeString().split(" ")[0];
+
+      document.getElementById("date").setAttribute("max", currentDate);
+
+      document.getElementById("date").addEventListener("change", function () {
+        const selectedDate = this.value;
+        const currentDate = new Date().toISOString().split("T")[0];
+        const currentTime = new Date().toTimeString().split(" ")[0];
+        if (selectedDate === currentDate) {
+          document.getElementById("time").setAttribute("max", currentTime);
+        } else {
+          document.getElementById("time").removeAttribute("max");
+        }
+      });
+
+      document.addEventListener("DOMContentLoaded", function () {
+        var Transaction = document.getElementById("tid");
+        var senderUPIInput = document.getElementById("sender-upi");
+        var receiverUPIInput = document.getElementById("receiver-upi");
+        var senderMobile = document.getElementById("sender-mobile");
+        var receiverMobile = document.getElementById("receiver-mobile");
+
+        Transaction.addEventListener("input", function () {
+          if (Transaction.validity.patternMismatch)
+            Transaction.setCustomValidity(
+              "Please enter a valid Transaction Id which contains 12 digits."
+            );
+          else Transaction.setCustomValidity("");
+        });
+        senderUPIInput.addEventListener("input", function () {
+          const receiverUPI = document.getElementById("receiver-upi").value;
+          if (senderUPIInput.value === receiverUPI) {
+            senderUPIInput.setCustomValidity(
+              "Sender's UPI ID cannot be the same as receiver's UPI ID."
+            );
+            showToast(
+              "Sender's UPI ID cannot be the same as receiver's UPI ID.",
+              "warning",
+              5000
+            );
+          } else {
+            senderUPIInput.setCustomValidity("");
+          }
+        });
+        receiverUPIInput.addEventListener("input", function () {
+          const senderUPI = document.getElementById("sender-upi").value;
+          if (receiverUPIInput.value === senderUPI) {
+            receiverUPIInput.setCustomValidity(
+              "Receiver's UPI ID cannot be the same as sender's UPI ID."
+            );
+            showToast(
+              "Sender's UPI ID cannot be the same as receiver's UPI ID.",
+              "warning",
+              5000
+            );
+          } else {
+            receiverUPIInput.setCustomValidity("");
+          }
+        });
+
+        senderMobile.addEventListener("input", function () {
+          const receiverMobile =
+            document.getElementById("receiver-mobile").value;
+          if (senderMobile.value === receiverMobile) {
+            senderMobile.setCustomValidity(
+              "Sender's mobile number cannot be the same as receiver's mobile number."
+            );
+            showToast(
+              "Sender's mobile number cannot be the same as receiver's mobile number.",
+              "warning",
+              5000
+            );
+          } else {
+            senderMobile.setCustomValidity("");
+          }
+        });
+        receiverMobile.addEventListener("input", function () {
+          const senderMobile = document.getElementById("sender-mobile").value;
+          if (receiverMobile.value === senderMobile) {
+            receiverMobile.setCustomValidity(
+              "Receiver's mobile number cannot be the same as sender's mobile number."
+            );
+            showToast(
+              "Receiver's mobile number cannot be the same as sender's mobile number.",
+              "warning",
+              5000
+            );
+          } else {
+            receiverMobile.setCustomValidity("");
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
