@@ -1,0 +1,7 @@
+flask
+smtplib
+tensorflow==2.12.0
+keras
+pickle
+pandas
+numpy
