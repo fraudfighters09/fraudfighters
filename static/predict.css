@@ -118,9 +118,9 @@ body {
 }
 .main form #tid,
 .main form #date,
-.main form #sender-upi,
-.main form #sender-mobile,
-.main form #age{
+.main form #age,       
+.main form #receiver-upi,
+.main form #receiver-mobile{
     margin-left: 20px;
 }
 .main form label{
