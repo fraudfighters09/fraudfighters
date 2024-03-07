@@ -63,9 +63,20 @@
             name="amount"
             required
             min="0"
+            max="99999"
           />
           <input type="date" id="date" name="date" required />
           <input type="time" id="time" name="time" required />
+
+          <input
+            type="number"
+            id="age"
+            placeholder="Age"
+            required
+            name="age"
+            min="18"
+            max="100"
+          />
           <input
             type="text"
             id="sender-upi"
@@ -104,15 +115,7 @@
             title="Please enter a valid Mobile Number using format +91xxxx-nnnnnn."
             ;
           />
-          <input
-            type="number"
-            id="age"
-            placeholder="Age"
-            required
-            name="age"
-            min="18"
-            max="100"
-          />
+
           <div class="dropdown">
             <label for="category" id="category">Category of Payment:</label>
             <select name="category" required>
@@ -132,7 +135,7 @@
             <input
               type="submit"
               formaction="{{ url_for('result') }}"
-              value="Send"
+              value="Detect"
               id="button"
             />
           </div>
