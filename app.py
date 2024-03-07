@@ -158,7 +158,7 @@ def result():
         print(valid, invalid)
         if len(valid) > len(invalid):
             print(
-                "The probabiity of the Transaction being Fradu is",
+                "The Probability of the Transaction being Fraud is",
                 sum(valid) / len(valid),
             )
             prob = sum(valid) / len(valid)
@@ -166,15 +166,15 @@ def result():
             p1 = prob[0] * 100
             mail_send(
                 email,
-                "Transaction Alert !!!",
-                "The probabiity of the Transaction being Fradu is " + str(p1) + "%",
+                "Transaction Alert !!! - Possibility of Valid Transaction",
+                "The Probability of the Transaction being Fraud is " + str(p1) + "%",
                 user_input,
             )
 
             return render_template("result.html", ans=True, prob=prob[0] * 100)
         else:
             print(
-                "The probabiity of the Transaction being Fradu is",
+                "The Probability of the Transaction being Fraud is",
                 sum(invalid) / len(invalid),
             )
             prob = sum(invalid) / len(invalid)
@@ -182,11 +182,10 @@ def result():
             print(" Possibility Fake UPI Tranaction ")
             mail_send(
                 email,
-                "Transaction Alert !!!",
-                "The probabiity of the Transaction being Fradu is " + str(p1) + "%",
+                "Transaction Alert !!! -  Possibility of Fraud Transaction",
+                "The Probability of the Transaction being Fraud is " + str(p1) + "%",
                 user_input,
             )
-            
 
             return render_template("result.html", ans=False, prob=prob[0] * 100)
 
